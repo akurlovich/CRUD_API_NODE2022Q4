@@ -1,0 +1,28 @@
+{
+  "name": "crud_api_node2022q4",
+  "version": "1.0.0",
+  "description": "Task 3 CRUD API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akurlovich/CRUD_API_NODE2022Q4.git"
+  },
+  "author": "Artsiom",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/akurlovich/CRUD_API_NODE2022Q4/issues"
+  },
+  "homepage": "https://github.com/akurlovich/CRUD_API_NODE2022Q4#readme",
+  "devDependencies": {
+    "@types/dotenv": "^8.2.0",
+    "@types/node": "^18.11.14",
+    "cross-env": "^7.0.3",
+    "nodemon": "^2.0.20",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.4"
+  }
+}
