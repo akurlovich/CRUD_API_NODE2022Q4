@@ -1,4 +1,10 @@
-import os from 'os';
+import { createServer } from 'http';
+import config from './Common/config';
 
-console.log(os.hostname());
+const server = createServer();
+
+server.listen(config.PORT, () => {
+  console.log(`Server started on port: ${config.PORT}`);
+});
+
 
