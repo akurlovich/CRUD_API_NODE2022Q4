@@ -4,11 +4,22 @@ import { ErrorsController } from '../Controllers/errorsController';
 import { IUser } from '../Types/IUser';
 import { getReqData } from '../Utils/GetReqData';
 import { v4 } from 'uuid';
-import { isArrayOfTypeString } from '../Utils/UserHelpFunctions';
+import { checkRequiredFields, isArrayOfTypeString } from '../Utils/UserHelpFunctions';
+import { IUserReqData } from '../Types/IUserReqData';
+import { ERROR_IN_SERVER_SIDE } from '../Common/constants';
 
 const { findAll, findById, create, update, remove } = UserModel;
 
 class Controller {
+  static handlerError({ name, message }: ErrorsController, res: ServerResponse): void {
+    if (name === 'ErrorsController') {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ message: message }));
+    } else {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ message: ERROR_IN_SERVER_SIDE }));
+    }
+  };
   
   async getUsers(res: ServerResponse): Promise<void> {
     try {
@@ -16,7 +27,7 @@ class Controller {
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify(users));
     } catch (error) {
-      // Controller.handlerError(error as ErrorsController, res);
+      Controller.handlerError(error as ErrorsController, res);
     }
   };
 
@@ -32,7 +43,7 @@ class Controller {
         res.end(JSON.stringify(user));
       }
     } catch (error) {
-      // Controller.handlerError(error as AppError, res);
+      Controller.handlerError(error as ErrorsController, res);
     }
   };
   
@@ -42,22 +53,33 @@ class Controller {
       
       if (!body) {
         throw new Error('No data sent');
-      }
+      };
+
       const { username, age, hobbies } = body;
 
-      const user: IUser = {
-        id: v4(),
+      const userReq: IUserReqData = {
         username,
         age,
         hobbies,
       };
+
+      const checkedUser = checkRequiredFields(userReq);
+
+      const user = {
+        id: v4(),
+        username: checkedUser.username,
+        age: checkedUser.age,
+        hobbies: checkedUser.hobbies
+      }
 
       await create(user);
       res.writeHead(201, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ user }));
     } catch (error) {
       console.log(error);
-      // Controller.handlerError(error as AppError, res);
+      // throw error;
+      // throw new ErrorsController(error);
+      Controller.handlerError(error as ErrorsController, res);
     }
   };
 
@@ -85,8 +107,8 @@ class Controller {
         res.end(JSON.stringify(userData));
       }
     } catch (error) {
-      // Controller.handlerError(error as AppError, res);
-      console.log(error);
+      Controller.handlerError(error as ErrorsController, res);
+      
     }
   };
 
@@ -103,28 +125,8 @@ class Controller {
         res.end(JSON.stringify({ message: `User ${user.username} removed` }));
       }
     } catch (error) {
-      // Controller.handlerError(error as AppError, res);
-      console.log(error);
-    }
-  };
-
-
-  private static checkFieldHobbies({ hobbies }: IUser): void {
-    if (!hobbies) {
-      return;
-    }
-    const len = hobbies.length;
-    const isHobbiesOfTypeString = isArrayOfTypeString(Object.values(hobbies));
-    try {
-      if (!Array.isArray(hobbies)) {
-        throw new ErrorsController('The hobby field must be of type array of strings or empty');
-      } else if (len !== 0 && isHobbiesOfTypeString) {
-        throw new ErrorsController('The hobby field must be of type array of strings or empty');
-      }
-    } catch (error) {
-      if (error) {
-        console.log(error);
-      }
+      Controller.handlerError(error as ErrorsController, res);
+      
     }
   };
 
