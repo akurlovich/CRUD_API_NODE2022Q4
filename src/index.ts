@@ -6,7 +6,7 @@ import { findMatch, getID } from './Utils/UserHelpFunctions';
 
 const { getUsers, getUser, createUser, updateUser, removeUser } = UserController;
 
-const server = createServer(async (req, res) => {
+export const server = createServer(async (req, res) => {
   req.on('error', () => {
     res.writeHead(500, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ message: ERROR_IN_SERVER_SIDE }));

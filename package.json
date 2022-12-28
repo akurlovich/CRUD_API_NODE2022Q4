@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start:dev": "nodemon -w src src/index.ts",
-    "start:prod": "tsc && node build/index.js"
+    "start:prod": "tsc && node build/index.js",
+    "start:multi": "nodemon -w src src/multi2.ts"
   },
   "repository": {
     "type": "git",
