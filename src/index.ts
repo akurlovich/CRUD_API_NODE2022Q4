@@ -62,7 +62,18 @@ interface ITaskWaiting {
 
 const queueArray: ITask[] = [
   { targetId: 4, action: 'init' }, { targetId: 0, action: 'init' }, { targetId: 1, action: 'init' },
-  { targetId: 6, action: 'init' }, { targetId: 1, action: 'prepare' }, { targetId: 8, action: 'init' },]
+  { targetId: 6, action: 'init' }, { targetId: 1, action: 'prepare' }, { targetId: 8, action: 'init' },
+  { targetId: 6, action: 'prepare' }, { targetId: 2, action: 'init' }, { targetId: 0, action: 'prepare' },
+  { targetId: 5, action: 'init' }, { targetId: 3, action: 'init' }, { targetId: 7, action: 'init' },
+  { targetId: 7, action: 'prepare' }, { targetId: 3, action: 'prepare' }, { targetId: 0, action: 'work' },
+  { targetId: 8, action: 'prepare' }, { targetId: 3, action: 'work' }, { targetId: 4, action: 'prepare' },
+  { targetId: 9, action: 'init' }, { targetId: 2, action: 'prepare' },
+  { targetId: 5, action: 'prepare' }, { targetId: 0, action: 'finalize' }, { targetId: 2, action: 'work' },
+  { targetId: 8, action: 'work' }, { targetId: 8, action: 'finalize' }, { targetId: 4, action: 'work' },
+  { targetId: 8, action: 'cleanup' }, { targetId: 9, action: 'prepare' }, { targetId: 0, action: 'cleanup' },
+  { targetId: 5, action: 'work' }, { targetId: 1, action: 'work' }, { targetId: 5, action: 'finalize' },
+  { targetId: 1, action: 'finalize' }, { targetId: 3, action: 'finalize' }, { targetId: 7, action: 'work' },
+];
 
 class Queue {
   paused: boolean;
@@ -117,11 +128,10 @@ class Queue {
         return;
       }
     }
-    // this.waiting.push({ task, start: Date.now(), priority });
     this.waiting.push({ task, start: Date.now(), priority });
-    // if (this.priorityMode) {
-    //   this.waiting.sort((a, b) => b.priority - a.priority);
-    // }
+    if (this.priorityMode) {
+      this.waiting.sort((a, b) => b.priority - a.priority);
+    }
   }
 
   next(task: ITask) {
