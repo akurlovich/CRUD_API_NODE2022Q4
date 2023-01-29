@@ -244,7 +244,7 @@ class Queue {
 const job = (task: ITask, next: (err: Error, res: ITask) => void) => {
   console.log(`Process targetId: ${task.targetId}`);
   // next(null, task)
-  setTimeout(next, 0, null, task);
+  setTimeout(next, 1000, null, task);
 };
 
 const queueArr = Queue.channels(3)
